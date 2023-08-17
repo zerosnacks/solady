@@ -35,6 +35,7 @@ contract ER6909Test is SoladyTest {
         uint256 mintAmount;
         uint256 transferAmount;
         uint256 burnAmount;
+        bool approved;
     }
 
     function setUp() public {
@@ -51,6 +52,7 @@ contract ER6909Test is SoladyTest {
             t.mintAmount = _random();
             t.transferAmount = _random();
             t.burnAmount = _random();
+            t.approved = _random() % 2 == 0;
         }
     }
 
@@ -61,6 +63,7 @@ contract ER6909Test is SoladyTest {
         token.mint(t.to, t.id, t.mintAmount);
 
         assertEq(token.balanceOf(t.to, t.id), t.mintAmount);
+        assertEq(token.totalSupply(t.id), t.mintAmount);
     }
 
     function testBurn(uint256) public {
@@ -79,6 +82,7 @@ contract ER6909Test is SoladyTest {
         token.burn(t.to, t.id, t.burnAmount);
 
         assertEq(token.balanceOf(t.to, t.id), t.mintAmount - t.burnAmount);
+        assertEq(token.totalSupply(t.id), t.mintAmount - t.burnAmount);
     }
 
     function testTransfer(uint256) public {
@@ -98,6 +102,7 @@ contract ER6909Test is SoladyTest {
             t.mintAmount - t.transferAmount
         );
         assertEq(token.balanceOf(t.to, t.id), t.transferAmount);
+        assertEq(token.totalSupply(t.id), t.mintAmount);
     }
 
     function testTransferFrom(uint256) public {
@@ -121,6 +126,17 @@ contract ER6909Test is SoladyTest {
             t.mintAmount - t.transferAmount
         );
         assertEq(token.balanceOf(t.to, t.id), t.transferAmount);
+        assertEq(token.totalSupply(t.id), t.mintAmount);
+    }
+
+    function testSetOperator(uint256) public {
+        _TestTemps memory t = _testTemps();
+
+        _expectOperatorSetEvent(t.from, t.to, t.approved);
+        vm.prank(t.from);
+        token.setOperator(t.to, t.approved);
+
+        assertEq(token.isOperator(t.from, t.to), t.approved);
     }
 
     function _expectTransferEvent(
