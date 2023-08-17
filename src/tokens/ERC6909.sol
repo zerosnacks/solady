@@ -12,11 +12,26 @@ abstract contract ERC6909 {
     /*                       CUSTOM ERRORS                        */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
-    /// @dev Thrown when `owner` balance for `id` is insufficient.
-    error InsufficientBalance(address owner, uint256 id);
+    // /// @dev Thrown when `owner` balance for `id` is insufficient.
+    // error InsufficientBalance(address owner, uint256 id);
 
-    /// @dev Thrown when `spender` allowance for `id` is insufficient.
-    error InsufficientPermission(address spender, uint256 id);
+    // /// @dev Thrown when `spender` allowance for `id` is insufficient.
+    // error InsufficientPermission(address spender, uint256 id);
+
+    /// @dev The total supply has overflowed.
+    error TotalSupplyOverflow();
+
+    /// @dev The allowance has overflowed.
+    error AllowanceOverflow();
+
+    /// @dev The allowance has underflowed.
+    error AllowanceUnderflow();
+
+    /// @dev Insufficient balance.
+    error InsufficientBalance();
+
+    /// @dev Insufficient allowance.
+    error InsufficientAllowance();
 
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                           EVENTS                           */
