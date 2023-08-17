@@ -14,20 +14,15 @@ contract MockERC6909 is ERC6909 {
         _burn(_brutalized(from), id, amount);
     }
 
-    function transfer(
-        address to,
-        uint256 id,
-        uint256 amount
-    ) public virtual override {
+    function transfer(address to, uint256 id, uint256 amount) public virtual override {
         super.transfer(_brutalized(to), id, amount);
     }
 
-    function transferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount
-    ) public virtual override {
+    function transferFrom(address from, address to, uint256 id, uint256 amount)
+        public
+        virtual
+        override
+    {
         super.transferFrom(_brutalized(from), _brutalized(to), id, amount);
     }
 

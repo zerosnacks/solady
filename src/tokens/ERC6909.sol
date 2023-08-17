@@ -96,7 +96,7 @@ abstract contract ERC6909 {
     /// @param receiver The address of the receiver.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    function transfer(address receiver, uint256 id, uint256 amount) public {
+    function transfer(address receiver, uint256 id, uint256 amount) public virtual {
         // if (balanceOf[msg.sender][id] < amount)
         //     revert InsufficientBalance(msg.sender, id);
         // balanceOf[msg.sender][id] -= amount;
@@ -109,7 +109,10 @@ abstract contract ERC6909 {
     /// @param receiver The address of the receiver.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    function transferFrom(address sender, address receiver, uint256 id, uint256 amount) public {
+    function transferFrom(address sender, address receiver, uint256 id, uint256 amount)
+        public
+        virtual
+    {
         // if (sender != msg.sender && !isOperator[sender][msg.sender]) {
         //     if (allowance[sender][msg.sender][id] < amount) {
         //         revert InsufficientPermission(msg.sender, id);
@@ -127,7 +130,7 @@ abstract contract ERC6909 {
     /// @param spender The address of the spender.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    function approve(address spender, uint256 id, uint256 amount) public {
+    function approve(address spender, uint256 id, uint256 amount) public virtual {
         // allowance[msg.sender][spender][id] = amount;
         // emit Approval(msg.sender, spender, id, amount);
     }
@@ -135,7 +138,7 @@ abstract contract ERC6909 {
     /// @notice Sets or removes a spender as an operator for the caller.
     /// @param spender The address of the spender.
     /// @param approved The approval status.
-    function setOperator(address spender, bool approved) public {
+    function setOperator(address spender, bool approved) public virtual {
         // isOperator[msg.sender][spender] = approved;
         // emit OperatorSet(msg.sender, spender, approved);
     }
@@ -143,7 +146,7 @@ abstract contract ERC6909 {
     /// @dev Returns true if this contract implements the interface defined by `interfaceId`.
     /// See: https://eips.ethereum.org/EIPS/eip-165
     /// This function call must use less than 30000 gas.
-    function supportsInterface(bytes4 interfaceId) public pure returns (bool result) {
+    function supportsInterface(bytes4 interfaceId) public pure virtual returns (bool result) {
         /// @solidity memory-safe-assembly
         assembly {
             let s := shr(224, interfaceId)
@@ -159,7 +162,7 @@ abstract contract ERC6909 {
     /// @dev Mints `amount` of `id` tokens to `to`, increasing the total supply.
     ///
     /// Emits a {Transfer} event.
-    function _mint(address to, uint256 id, uint256 amount) internal {
+    function _mint(address to, uint256 id, uint256 amount) internal virtual {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(address(0), to, id, amount);
         }
@@ -178,7 +181,7 @@ abstract contract ERC6909 {
     /*                  INTERNAL BURN FUNCTIONS                   */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
-    function _burn(address from, uint256 id, uint256 amount) internal {
+    function _burn(address from, uint256 id, uint256 amount) internal virtual {
         if (_useBeforeTokenTransfer()) {
             _beforeTokenTransfer(from, address(0), id, amount);
         }
