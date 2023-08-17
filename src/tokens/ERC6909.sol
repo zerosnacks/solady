@@ -90,17 +90,16 @@ abstract contract ERC6909 {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @notice The total supply of each id.
-    mapping(uint256 id => uint256 amount) public totalSupply;
+    mapping(uint256 => uint256) public totalSupply;
 
     /// @notice Owner balance of an id.
-    mapping(address owner => mapping(uint256 id => uint256 amount)) public balanceOf;
+    mapping(address => mapping(uint256 => uint256)) public balanceOf;
 
     /// @notice Spender allowance of an id.
-    mapping(address owner => mapping(address spender => mapping(uint256 id => uint256 amount)))
-        public allowance;
+    mapping(address => mapping(address => mapping(uint256 => uint256))) public allowance;
 
     /// @notice Checks if a spender is approved by an owner as an operator.
-    mapping(address owner => mapping(address spender => bool)) public isOperator;
+    mapping(address => mapping(address => bool)) public isOperator;
 
     /// @notice Transfers an amount of an id from the caller to a receiver.
     /// @param receiver The address of the receiver.
