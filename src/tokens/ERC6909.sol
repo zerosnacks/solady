@@ -2,6 +2,7 @@
 pragma solidity ^0.8.4;
 
 // TODO: add metadata
+// TODO: shouldn't methods return bool?
 
 /// @notice Simple ERC6909 implementation.
 /// @author Solady (https://github.com/vectorized/solady/blob/main/src/tokens/ERC6909.sol)
@@ -156,6 +157,64 @@ abstract contract ERC6909 {
     }
 
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                INTERNAL ALLOWANCE FUNCTIONS                */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+    /// @dev Updates the allowance of `owner` for `spender` based on spent `amount`.
+    // function _spendAllowance(
+    //     address owner,
+    //     address spender,
+    //     uint256 amount
+    // ) internal virtual {
+    //     /// @solidity memory-safe-assembly
+    //     assembly {
+    //         // Compute the allowance slot and load its value.
+    //         mstore(0x20, spender)
+    //         mstore(0x0c, _ALLOWANCE_SLOT_SEED)
+    //         mstore(0x00, owner)
+    //         let allowanceSlot := keccak256(0x0c, 0x34)
+    //         let allowance_ := sload(allowanceSlot)
+    //         // If the allowance is not the maximum uint256 value.
+    //         if iszero(eq(allowance_, not(0))) {
+    //             // Revert if the amount to be transferred exceeds the allowance.
+    //             if gt(amount, allowance_) {
+    //                 mstore(0x00, 0x13be252b) // `InsufficientAllowance()`.
+    //                 revert(0x1c, 0x04)
+    //             }
+    //             // Subtract and store the updated allowance.
+    //             sstore(allowanceSlot, sub(allowance_, amount))
+    //         }
+    //     }
+    // }
+
+    // /// @dev Sets `amount` as the allowance of `spender` over the tokens of `owner`.
+    // ///
+    // /// Emits a {Approval} event.
+    // function _approve(
+    //     address owner,
+    //     address spender,
+    //     uint256 amount
+    // ) internal virtual {
+    //     /// @solidity memory-safe-assembly
+    //     assembly {
+    //         let owner_ := shl(96, owner)
+    //         // Compute the allowance slot and store the amount.
+    //         mstore(0x20, spender)
+    //         mstore(0x0c, or(owner_, _ALLOWANCE_SLOT_SEED))
+    //         sstore(keccak256(0x0c, 0x34), amount)
+    //         // Emit the {Approval} event.
+    //         mstore(0x00, amount)
+    //         log3(
+    //             0x00,
+    //             0x20,
+    //             _APPROVAL_EVENT_SIGNATURE,
+    //             shr(96, owner_),
+    //             shr(96, mload(0x2c))
+    //         )
+    //     }
+    // }
+
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                  INTERNAL MINT FUNCTIONS                   */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
@@ -167,7 +226,7 @@ abstract contract ERC6909 {
             _beforeTokenTransfer(address(0), to, id, amount);
         }
 
-        // WARNING: important safety checks should preceed calls to this method.
+        // WARNING: important safety checks should precede calls to this method.
         // balanceOf[to][id] += amount;
         // totalSupply[id] += amount;
         // emit Transfer(address(0), to, id, amount);
@@ -186,7 +245,7 @@ abstract contract ERC6909 {
             _beforeTokenTransfer(from, address(0), id, amount);
         }
 
-        // WARNING: important safety checks should preceed calls to this method.
+        // WARNING: important safety checks should precede calls to this method.
         // balanceOf[from][id] -= amount;
         // totalSupply[id] -= amount;
         // emit Transfer(from, address(0), id, amount);
