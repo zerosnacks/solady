@@ -71,6 +71,7 @@ contract ER6909Test is SoladyTest {
         _expectTransferEvent(address(0), t.to, t.id, t.mintAmount);
         token.mint(t.to, t.id, t.mintAmount);
 
+        _expectApprovalEvent(t.to, address(this), t.id, t.burnAmount);
         vm.prank(t.to);
         token.approve(address(this), t.id, t.burnAmount);
 
@@ -78,6 +79,48 @@ contract ER6909Test is SoladyTest {
         token.burn(t.to, t.id, t.burnAmount);
 
         assertEq(token.balanceOf(t.to, t.id), t.mintAmount - t.burnAmount);
+    }
+
+    function testTransfer(uint256) public {
+        _TestTemps memory t = _testTemps();
+
+        t.transferAmount = _bound(t.transferAmount, 0, t.mintAmount);
+
+        _expectTransferEvent(address(0), t.from, t.id, t.mintAmount);
+        token.mint(t.from, t.id, t.mintAmount);
+
+        _expectTransferEvent(t.from, t.to, t.id, t.transferAmount);
+        vm.prank(t.from);
+        token.transfer(t.to, t.id, t.transferAmount);
+
+        assertEq(
+            token.balanceOf(t.from, t.id),
+            t.mintAmount - t.transferAmount
+        );
+        assertEq(token.balanceOf(t.to, t.id), t.transferAmount);
+    }
+
+    function testTransferFrom(uint256) public {
+        _TestTemps memory t = _testTemps();
+
+        t.transferAmount = _bound(t.transferAmount, 0, t.mintAmount);
+
+        _expectTransferEvent(address(0), t.from, t.id, t.mintAmount);
+        token.mint(t.from, t.id, t.mintAmount);
+
+        _expectApprovalEvent(t.from, t.to, t.id, t.transferAmount);
+        vm.prank(t.from);
+        token.approve(t.to, t.id, t.transferAmount);
+
+        _expectTransferEvent(t.from, t.to, t.id, t.transferAmount);
+        vm.prank(t.to);
+        token.transferFrom(t.from, t.to, t.id, t.transferAmount);
+
+        assertEq(
+            token.balanceOf(t.from, t.id),
+            t.mintAmount - t.transferAmount
+        );
+        assertEq(token.balanceOf(t.to, t.id), t.transferAmount);
     }
 
     function _expectTransferEvent(
