@@ -45,11 +45,7 @@ abstract contract ERC20 {
     event Transfer(address indexed from, address indexed to, uint256 amount);
 
     /// @dev Emitted when `amount` tokens is approved by `owner` to be used by `spender`.
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 amount
-    );
+    event Approval(address indexed owner, address indexed spender, uint256 amount);
 
     /// @dev `keccak256(bytes("Transfer(address,address,uint256)"))`.
     uint256 private constant _TRANSFER_EVENT_SIGNATURE =
@@ -119,9 +115,7 @@ abstract contract ERC20 {
     }
 
     /// @dev Returns the amount of tokens owned by `owner`.
-    function balanceOf(
-        address owner
-    ) public view virtual returns (uint256 result) {
+    function balanceOf(address owner) public view virtual returns (uint256 result) {
         /// @solidity memory-safe-assembly
         assembly {
             mstore(0x0c, _BALANCE_SLOT_SEED)
@@ -131,10 +125,12 @@ abstract contract ERC20 {
     }
 
     /// @dev Returns the amount of tokens that `spender` can spend on behalf of `owner`.
-    function allowance(
-        address owner,
-        address spender
-    ) public view virtual returns (uint256 result) {
+    function allowance(address owner, address spender)
+        public
+        view
+        virtual
+        returns (uint256 result)
+    {
         /// @solidity memory-safe-assembly
         assembly {
             mstore(0x20, spender)
@@ -147,10 +143,7 @@ abstract contract ERC20 {
     /// @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
     ///
     /// Emits a {Approval} event.
-    function approve(
-        address spender,
-        uint256 amount
-    ) public virtual returns (bool) {
+    function approve(address spender, uint256 amount) public virtual returns (bool) {
         /// @solidity memory-safe-assembly
         assembly {
             // Compute the allowance slot and store the amount.
@@ -160,13 +153,7 @@ abstract contract ERC20 {
             sstore(keccak256(0x0c, 0x34), amount)
             // Emit the {Approval} event.
             mstore(0x00, amount)
-            log3(
-                0x00,
-                0x20,
-                _APPROVAL_EVENT_SIGNATURE,
-                caller(),
-                shr(96, mload(0x2c))
-            )
+            log3(0x00, 0x20, _APPROVAL_EVENT_SIGNATURE, caller(), shr(96, mload(0x2c)))
         }
         return true;
     }
@@ -174,10 +161,7 @@ abstract contract ERC20 {
     /// @dev Atomically increases the allowance granted to `spender` by the caller.
     ///
     /// Emits a {Approval} event.
-    function increaseAllowance(
-        address spender,
-        uint256 difference
-    ) public virtual returns (bool) {
+    function increaseAllowance(address spender, uint256 difference) public virtual returns (bool) {
         /// @solidity memory-safe-assembly
         assembly {
             // Compute the allowance slot and load its value.
@@ -197,13 +181,7 @@ abstract contract ERC20 {
             sstore(allowanceSlot, allowanceAfter)
             // Emit the {Approval} event.
             mstore(0x00, allowanceAfter)
-            log3(
-                0x00,
-                0x20,
-                _APPROVAL_EVENT_SIGNATURE,
-                caller(),
-                shr(96, mload(0x2c))
-            )
+            log3(0x00, 0x20, _APPROVAL_EVENT_SIGNATURE, caller(), shr(96, mload(0x2c)))
         }
         return true;
     }
@@ -211,10 +189,7 @@ abstract contract ERC20 {
     /// @dev Atomically decreases the allowance granted to `spender` by the caller.
     ///
     /// Emits a {Approval} event.
-    function decreaseAllowance(
-        address spender,
-        uint256 difference
-    ) public virtual returns (bool) {
+    function decreaseAllowance(address spender, uint256 difference) public virtual returns (bool) {
         /// @solidity memory-safe-assembly
         assembly {
             // Compute the allowance slot and load its value.
@@ -233,13 +208,7 @@ abstract contract ERC20 {
             sstore(allowanceSlot, allowanceAfter)
             // Emit the {Approval} event.
             mstore(0x00, allowanceAfter)
-            log3(
-                0x00,
-                0x20,
-                _APPROVAL_EVENT_SIGNATURE,
-                caller(),
-                shr(96, mload(0x2c))
-            )
+            log3(0x00, 0x20, _APPROVAL_EVENT_SIGNATURE, caller(), shr(96, mload(0x2c)))
         }
         return true;
     }
@@ -250,10 +219,7 @@ abstract contract ERC20 {
     /// - `from` must at least have `amount`.
     ///
     /// Emits a {Transfer} event.
-    function transfer(
-        address to,
-        uint256 amount
-    ) public virtual returns (bool) {
+    function transfer(address to, uint256 amount) public virtual returns (bool) {
         _beforeTokenTransfer(msg.sender, to, amount);
         /// @solidity memory-safe-assembly
         assembly {
@@ -278,13 +244,7 @@ abstract contract ERC20 {
             sstore(toBalanceSlot, add(sload(toBalanceSlot), amount))
             // Emit the {Transfer} event.
             mstore(0x20, amount)
-            log3(
-                0x20,
-                0x20,
-                _TRANSFER_EVENT_SIGNATURE,
-                caller(),
-                shr(96, mload(0x0c))
-            )
+            log3(0x20, 0x20, _TRANSFER_EVENT_SIGNATURE, caller(), shr(96, mload(0x0c)))
         }
         _afterTokenTransfer(msg.sender, to, amount);
         return true;
@@ -299,11 +259,7 @@ abstract contract ERC20 {
     /// - The caller must have at least `amount` of allowance to transfer the tokens of `from`.
     ///
     /// Emits a {Transfer} event.
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) public virtual returns (bool) {
+    function transferFrom(address from, address to, uint256 amount) public virtual returns (bool) {
         _beforeTokenTransfer(from, to, amount);
         /// @solidity memory-safe-assembly
         assembly {
@@ -343,13 +299,7 @@ abstract contract ERC20 {
             sstore(toBalanceSlot, add(sload(toBalanceSlot), amount))
             // Emit the {Transfer} event.
             mstore(0x20, amount)
-            log3(
-                0x20,
-                0x20,
-                _TRANSFER_EVENT_SIGNATURE,
-                shr(96, from_),
-                shr(96, mload(0x0c))
-            )
+            log3(0x20, 0x20, _TRANSFER_EVENT_SIGNATURE, shr(96, from_), shr(96, mload(0x0c)))
         }
         _afterTokenTransfer(from, to, amount);
         return true;
@@ -361,9 +311,7 @@ abstract contract ERC20 {
 
     /// @dev Returns the current nonce for `owner`.
     /// This value is used to compute the signature for EIP-2612 permit.
-    function nonces(
-        address owner
-    ) public view virtual returns (uint256 result) {
+    function nonces(address owner) public view virtual returns (uint256 result) {
         /// @solidity memory-safe-assembly
         assembly {
             // Compute the nonce slot and load its value.
@@ -538,13 +486,7 @@ abstract contract ERC20 {
             sstore(_TOTAL_SUPPLY_SLOT, sub(sload(_TOTAL_SUPPLY_SLOT), amount))
             // Emit the {Transfer} event.
             mstore(0x00, amount)
-            log3(
-                0x00,
-                0x20,
-                _TRANSFER_EVENT_SIGNATURE,
-                shr(96, shl(96, from)),
-                0
-            )
+            log3(0x00, 0x20, _TRANSFER_EVENT_SIGNATURE, shr(96, shl(96, from)), 0)
         }
         _afterTokenTransfer(from, address(0), amount);
     }
@@ -554,11 +496,7 @@ abstract contract ERC20 {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @dev Moves `amount` of tokens from `from` to `to`.
-    function _transfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual {
+    function _transfer(address from, address to, uint256 amount) internal virtual {
         _beforeTokenTransfer(from, to, amount);
         /// @solidity memory-safe-assembly
         assembly {
@@ -583,13 +521,7 @@ abstract contract ERC20 {
             sstore(toBalanceSlot, add(sload(toBalanceSlot), amount))
             // Emit the {Transfer} event.
             mstore(0x20, amount)
-            log3(
-                0x20,
-                0x20,
-                _TRANSFER_EVENT_SIGNATURE,
-                shr(96, from_),
-                shr(96, mload(0x0c))
-            )
+            log3(0x20, 0x20, _TRANSFER_EVENT_SIGNATURE, shr(96, from_), shr(96, mload(0x0c)))
         }
         _afterTokenTransfer(from, to, amount);
     }
@@ -599,11 +531,7 @@ abstract contract ERC20 {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @dev Updates the allowance of `owner` for `spender` based on spent `amount`.
-    function _spendAllowance(
-        address owner,
-        address spender,
-        uint256 amount
-    ) internal virtual {
+    function _spendAllowance(address owner, address spender, uint256 amount) internal virtual {
         /// @solidity memory-safe-assembly
         assembly {
             // Compute the allowance slot and load its value.
@@ -628,11 +556,7 @@ abstract contract ERC20 {
     /// @dev Sets `amount` as the allowance of `spender` over the tokens of `owner`.
     ///
     /// Emits a {Approval} event.
-    function _approve(
-        address owner,
-        address spender,
-        uint256 amount
-    ) internal virtual {
+    function _approve(address owner, address spender, uint256 amount) internal virtual {
         /// @solidity memory-safe-assembly
         assembly {
             let owner_ := shl(96, owner)
@@ -642,13 +566,7 @@ abstract contract ERC20 {
             sstore(keccak256(0x0c, 0x34), amount)
             // Emit the {Approval} event.
             mstore(0x00, amount)
-            log3(
-                0x00,
-                0x20,
-                _APPROVAL_EVENT_SIGNATURE,
-                shr(96, owner_),
-                shr(96, mload(0x2c))
-            )
+            log3(0x00, 0x20, _APPROVAL_EVENT_SIGNATURE, shr(96, owner_), shr(96, mload(0x2c)))
         }
     }
 
@@ -658,17 +576,9 @@ abstract contract ERC20 {
 
     /// @dev Hook that is called before any transfer of tokens.
     /// This includes minting and burning.
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual {}
+    function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual {}
 
     /// @dev Hook that is called after any transfer of tokens.
     /// This includes minting and burning.
-    function _afterTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal virtual {}
+    function _afterTokenTransfer(address from, address to, uint256 amount) internal virtual {}
 }

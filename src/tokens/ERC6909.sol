@@ -22,26 +22,14 @@ abstract contract ERC6909 {
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /// @dev Emitted when `amount` tokens with `id` is transferred from `from` to `to`.
-    event Transfer(
-        address indexed from,
-        address indexed to,
-        uint256 indexed id,
-        uint256 amount
-    );
+    event Transfer(address indexed from, address indexed to, uint256 indexed id, uint256 amount);
 
     /// @dev Emitted when an operator is set by `owner` for `spender` with `approved` value.
-    event OperatorSet(
-        address indexed owner,
-        address indexed spender,
-        bool approved
-    );
+    event OperatorSet(address indexed owner, address indexed spender, bool approved);
 
     /// @dev Emitted when `amount` tokens with `id` is approved from `owner` for `spender`.
     event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 indexed id,
-        uint256 amount
+        address indexed owner, address indexed spender, uint256 indexed id, uint256 amount
     );
 
     /// @dev `keccak256(bytes("Transfer(address,address,uint256,uint256)"))`.
@@ -88,10 +76,7 @@ abstract contract ERC6909 {
     // mapping(uint256 id => uint256 amount) public totalSupply;
 
     /// @dev Returns the amount of `id` owned by `owner`.
-    function balanceOf(
-        address owner,
-        uint256 id
-    ) public view virtual returns (uint256 result) {
+    function balanceOf(address owner, uint256 id) public view virtual returns (uint256 result) {
         /// @solidity memory-safe-assembly
         assembly {
             mstore(0x20, _ERC6909_MASTER_SLOT_SEED)
@@ -124,12 +109,7 @@ abstract contract ERC6909 {
     /// @param receiver The address of the receiver.
     /// @param id The id of the token.
     /// @param amount The amount of the token.
-    function transferFrom(
-        address sender,
-        address receiver,
-        uint256 id,
-        uint256 amount
-    ) public {
+    function transferFrom(address sender, address receiver, uint256 id, uint256 amount) public {
         // if (sender != msg.sender && !isOperator[sender][msg.sender]) {
         //     if (allowance[sender][msg.sender][id] < amount) {
         //         revert InsufficientPermission(msg.sender, id);
@@ -163,9 +143,7 @@ abstract contract ERC6909 {
     /// @dev Returns true if this contract implements the interface defined by `interfaceId`.
     /// See: https://eips.ethereum.org/EIPS/eip-165
     /// This function call must use less than 30000 gas.
-    function supportsInterface(
-        bytes4 interfaceId
-    ) public pure returns (bool result) {
+    function supportsInterface(bytes4 interfaceId) public pure returns (bool result) {
         /// @solidity memory-safe-assembly
         assembly {
             let s := shr(224, interfaceId)
@@ -227,12 +205,10 @@ abstract contract ERC6909 {
 
     /// @dev Hook that is called before any transfer of tokens.
     /// This includes minting and burning.
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount
-    ) internal virtual {}
+    function _beforeTokenTransfer(address from, address to, uint256 id, uint256 amount)
+        internal
+        virtual
+    {}
 
     /// @dev Override this function to return true if `_afterTokenTransfer` is used.
     /// The is to help the compiler avoid producing dead bytecode.
@@ -242,10 +218,8 @@ abstract contract ERC6909 {
 
     /// @dev Hook that is called after any transfer of tokens.
     /// This includes minting and burning.
-    function _afterTokenTransfer(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount
-    ) internal virtual {}
+    function _afterTokenTransfer(address from, address to, uint256 id, uint256 amount)
+        internal
+        virtual
+    {}
 }
