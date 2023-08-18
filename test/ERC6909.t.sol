@@ -70,7 +70,7 @@ contract ERC6909HooksTest is SoladyTest {
     }
 }
 
-contract ER6909Test is SoladyTest {
+contract ERC6909Test is SoladyTest {
     MockERC6909 token;
 
     event Transfer(address indexed from, address indexed to, uint256 indexed id, uint256 amount);
@@ -127,15 +127,22 @@ contract ER6909Test is SoladyTest {
         _expectTransferEvent(address(0), t.to, t.id, t.mintAmount);
         token.mint(t.to, t.id, t.mintAmount);
 
+        assertEq(token.allowance(t.from, t.to, t.id), 0);
+
         _expectApprovalEvent(t.to, address(this), t.id, t.burnAmount);
         vm.prank(t.to);
         token.approve(address(this), t.id, t.burnAmount);
+
+        assertEq(token.allowance(t.to, address(this), t.id), t.burnAmount);
 
         _expectTransferEvent(t.to, address(0), t.id, t.burnAmount);
         token.burn(t.to, t.id, t.burnAmount);
 
         assertEq(token.balanceOf(t.to, t.id), t.mintAmount - t.burnAmount);
         assertEq(token.totalSupply(t.id), t.mintAmount - t.burnAmount);
+
+        // TODO: is it expected behaviour that allowance is not subtracted?
+        assertEq(token.allowance(t.to, address(this), t.id), t.burnAmount);
     }
 
     function testTransfer(uint256) public {
@@ -163,9 +170,13 @@ contract ER6909Test is SoladyTest {
         _expectTransferEvent(address(0), t.from, t.id, t.mintAmount);
         token.mint(t.from, t.id, t.mintAmount);
 
+        assertEq(token.allowance(t.from, t.to, t.id), 0);
+
         _expectApprovalEvent(t.from, t.to, t.id, t.transferAmount);
         vm.prank(t.from);
         token.approve(t.to, t.id, t.transferAmount);
+
+        assertEq(token.allowance(t.from, t.to, t.id), t.transferAmount);
 
         _expectTransferEvent(t.from, t.to, t.id, t.transferAmount);
         vm.prank(t.to);
@@ -174,7 +185,37 @@ contract ER6909Test is SoladyTest {
         assertEq(token.balanceOf(t.from, t.id), t.mintAmount - t.transferAmount);
         assertEq(token.balanceOf(t.to, t.id), t.transferAmount);
         assertEq(token.totalSupply(t.id), t.mintAmount);
+        assertEq(token.allowance(t.from, t.to, t.id), 0);
     }
+
+    // function testTransferFromInfiniteAllowance(uint256) public {
+    //     _TestTemps memory t = _testTemps();
+
+    //     t.transferAmount = _bound(t.transferAmount, 0, t.mintAmount);
+
+    //     _expectTransferEvent(address(0), t.from, t.id, t.mintAmount);
+    //     token.mint(t.from, t.id, t.mintAmount);
+
+    //     assertEq(token.allowance(t.from, t.to, t.id), 0);
+
+    //     _expectApprovalEvent(t.from, t.to, t.id, type(uint256).max);
+    //     vm.prank(t.from);
+    //     token.approve(t.to, t.id, type(uint256).max);
+
+    //     assertEq(token.allowance(t.from, t.to, t.id), type(uint256).max);
+
+    //     _expectTransferEvent(t.from, t.to, t.id, t.transferAmount);
+    //     vm.prank(t.to);
+    //     token.transferFrom(t.from, t.to, t.id, t.transferAmount);
+
+    //     assertEq(
+    //         token.balanceOf(t.from, t.id),
+    //         t.mintAmount - t.transferAmount
+    //     );
+    //     assertEq(token.balanceOf(t.to, t.id), t.transferAmount);
+    //     assertEq(token.totalSupply(t.id), t.mintAmount);
+    //     // assertEq(token.allowance(t.from, t.to, t.id), type(uint256).max);
+    // }
 
     function testSetOperator(uint256) public {
         _TestTemps memory t = _testTemps();

@@ -3,9 +3,13 @@ pragma solidity ^0.8.4;
 
 // TODO: optimize
 // TODO: add metadata
-// TODO: shouldn't methods return bool?
+// TODO: are infinite approvals handled correctly?
+// TODO: should burn consume allowance?
+// TODO: add spendAllowance
+// TODO: do not consume allowance if allowance is infinite
+// TODO: add EIP-712 implementation?
 
-/// @notice Simple ERC6909 implementation.
+/// @notice Simple ERC6909
 /// @author Solady (https://github.com/vectorized/solady/blob/main/src/tokens/ERC6909.sol)
 /// @author Modified from ERC-6909 (https://github.com/jtriley-eth/ERC-6909/blob/main/src/ERC6909.sol)
 abstract contract ERC6909 {
@@ -13,20 +17,14 @@ abstract contract ERC6909 {
     /*                       CUSTOM ERRORS                        */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
-    // /// @dev Thrown when `owner` balance for `id` is insufficient.
-    // error InsufficientBalance(address owner, uint256 id);
+    // /// @dev The total supply has overflowed.
+    // error TotalSupplyOverflow();
 
-    // /// @dev Thrown when `spender` allowance for `id` is insufficient.
-    // error InsufficientPermission(address spender, uint256 id);
+    // /// @dev The allowance has overflowed.
+    // error AllowanceOverflow();
 
-    /// @dev The total supply has overflowed.
-    error TotalSupplyOverflow();
-
-    /// @dev The allowance has overflowed.
-    error AllowanceOverflow();
-
-    /// @dev The allowance has underflowed.
-    error AllowanceUnderflow();
+    // /// @dev The allowance has underflowed.
+    // error AllowanceUnderflow();
 
     /// @dev Insufficient balance.
     error InsufficientBalance();
